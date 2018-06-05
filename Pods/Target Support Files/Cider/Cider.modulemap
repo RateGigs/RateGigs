@@ -1,0 +1,6 @@
+framework module Cider {
+  umbrella header "Cider-umbrella.h"
+
+  export *
+  module * { export * }
+}
