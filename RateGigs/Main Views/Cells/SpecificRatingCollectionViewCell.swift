@@ -11,5 +11,6 @@ import UIKit
 class SpecificRatingCollectionViewCell: UICollectionViewCell {
     @IBOutlet var numberLabel: UILabel!
     @IBOutlet var ratingTypeLabel: UILabel!
+    @IBOutlet weak var ratingValueImage: UIImageView!
     
 }

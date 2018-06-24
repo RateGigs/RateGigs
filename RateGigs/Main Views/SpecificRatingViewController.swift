@@ -19,19 +19,44 @@ class SpecificRatingViewController: UIViewController, UICollectionViewDataSource
     var artist = false
     @IBOutlet var ratingLabel: UILabel!
     @IBOutlet var ratingsCollection: UICollectionView!
-    //0 = simple, 1 = in depth
+    var curRating : Rating!
     var ratingType = 0
     var ref = DatabaseReference()
     
-    var ratingTypes = ["Crowd Involvement", "Raw Talent", "Something", "Something", "Something"]
+    var overallRating = 0.0
+    var username = ""
+    var body = ""
+    var production = 0.0
+    var crowdEngagement = 0.0
+    var rawTalent = 0.0
+    var setList = 0.0
     
+    var ratingTypes = ["Overall Rating", "Production", "Crowd Engagement", "Raw Talent", "Set List"]
+    var ratingValues = [0.0, 0.0, 0.0, 0.0, 0.0]
+    
+    @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var bodyView: UITextView!
     @IBOutlet var soundwave: UIImageView!
     
     override func viewWillAppear(_ animated: Bool) {
         titleLabel.text = artistName
         
-        ref = Database.database().reference()
+        overallRating = curRating.overall_rating
+        username = curRating.username
+        body = curRating.body
+        production = curRating.production
+        crowdEngagement = curRating.crowd_engagement
+        rawTalent = curRating.raw_talent
+        setList = curRating.set_list
+        ratingType = curRating.ratingType
+        
         loadArtist()
+        
+        usernameLabel.text = username
+        bodyView.text = body
+        ref = Database.database().reference()
+        
+        self.soundwave.image = UIImage(named: (overallRating.round(nearest: 1) * 10).description)
     }
     
     override func viewDidLoad() {
@@ -39,30 +64,11 @@ class SpecificRatingViewController: UIViewController, UICollectionViewDataSource
     }
 
     func loadArtist(){
-        ref.child("Artists").child(artistID).child("Ratings")
-            .child(ratingID).observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            if(snapshot.exists()){
-                let value = snapshot.value as? NSDictionary
-                let overallRatingString = value?["overall_rating"] as? Double
-                self.ratingType = (value?["ratingType"] as? Int)!
-                self.ratingLabel.text = Int((overallRatingString)!).description
-                
-                if(self.ratingType == 0){
-                    self.ratingLabel.isHidden = false
-                    self.ratingCircle.isHidden = false
-                    self.ratingsCollection.isHidden = true
-                }
-                
-                let overallRating: Double = Double(overallRatingString!)
-                self.soundwave.image = UIImage(named: (overallRating.round(nearest: 1) * 10).description)
-              //  self.ratingLabel.text =  num.round(nearest: 0.1).description
-              //  self.currentRating = overallRating
-            }
-                self.ratingsCollection.reloadData()
-        }) { (error) in
-            print(error.localizedDescription)
-        }
+        ratingValues[0] = overallRating
+        ratingValues[1] = production
+        ratingValues[2] = crowdEngagement
+        ratingValues[3] = rawTalent
+        ratingValues[4] = setList
     }
     
     override func didReceiveMemoryWarning() {
@@ -75,18 +81,45 @@ class SpecificRatingViewController: UIViewController, UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        if(ratingType == 0){
-//            return 0
-//        }else{
           return 5
-//        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell : SpecificRatingCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SpecificRatingCollectionViewCell
         
         cell.ratingTypeLabel.text = ratingTypes[indexPath.row]
-        
+
+        if(ratingType == 0){
+            switch indexPath.row {
+                case 0:
+                    cell.ratingValueImage.image = UIImage(named: "r_" + (Int(overallRating)).description)
+                case 1:
+                    cell.ratingValueImage.image = UIImage(named: "na")
+                case 2:
+                    cell.ratingValueImage.image = UIImage(named: "na")
+                case 3:
+                    cell.ratingValueImage.image = UIImage(named: "na")
+                case 4:
+                    cell.ratingValueImage.image = UIImage(named: "na")
+                default:
+                    cell.ratingValueImage.image = UIImage(named: "na")
+            }
+        }else{
+            switch indexPath.row {
+                case 0:
+                    cell.ratingValueImage.image = UIImage(named: "r_" + (Int(overallRating)).description)
+                case 1:
+                    cell.ratingValueImage.image = UIImage(named: "r_" + (Int(production)).description)
+                case 2:
+                    cell.ratingValueImage.image = UIImage(named: "r_" + (Int(crowdEngagement)).description)
+                case 3:
+                    cell.ratingValueImage.image = UIImage(named: "r_" + (Int(rawTalent)).description)
+                case 4:
+                    cell.ratingValueImage.image = UIImage(named: "r_" + (Int(setList)).description)
+                default:
+                    cell.ratingValueImage.image = UIImage(named: "r_0")
+            }
+        }
         return cell
     }
 

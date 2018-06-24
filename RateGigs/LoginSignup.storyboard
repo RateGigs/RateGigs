@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="fPe-py-SwC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="fPe-py-SwC">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -70,7 +70,7 @@
                                 <rect key="frame" x="34" y="405" width="252" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                                 <connections>
                                     <outlet property="delegate" destination="KXm-1i-FUE" id="AS7-80-x9l"/>
                                 </connections>
@@ -300,7 +300,7 @@
                     <navigationItem key="navigationItem" id="bga-is-uE4"/>
                     <connections>
                         <outlet property="collectionView" destination="3C9-14-CCE" id="sdP-Hv-Q7t"/>
-                        <segue destination="0Mq-SB-dAx" kind="show" identifier="next" id="7HS-Dh-IzX"/>
+                        <segue destination="ieq-ft-5zA" kind="show" identifier="next" id="5yJ-E8-OSY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KhY-Fx-04b" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -316,13 +316,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Rate_Gigs_White_Small" translatesAutoresizingMaskIntoConstraints="NO" id="rXH-3g-Em2">
-                                <rect key="frame" x="84" y="88" width="151" height="79"/>
+                                <rect key="frame" x="84" y="44" width="151" height="79"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="79" id="SRQ-Jh-Gtl"/>
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zok-N7-q73">
-                                <rect key="frame" x="9" y="256" width="301" height="120"/>
+                                <rect key="frame" x="9" y="212" width="301" height="120"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Who do you listen to?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XuU-Wp-EVE">
                                         <rect key="frame" x="10" y="8" width="280" height="73"/>
@@ -355,7 +355,7 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VyC-RN-7cx">
-                                <rect key="frame" x="0.0" y="378" width="320" height="190"/>
+                                <rect key="frame" x="0.0" y="334" width="320" height="234"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="190" id="vv0-Oi-Hvs"/>
@@ -406,7 +406,7 @@
                                 </connections>
                             </collectionView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Help RATEGIGS get to know you" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C01-25-Kwf">
-                                <rect key="frame" x="40" y="175" width="239" height="73"/>
+                                <rect key="frame" x="40" y="131" width="239" height="73"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="73" id="xri-6G-naT"/>
                                 </constraints>
@@ -437,12 +437,11 @@
                     <navigationItem key="navigationItem" id="X8A-r1-tnQ"/>
                     <connections>
                         <outlet property="collectionView" destination="VyC-RN-7cx" id="tHe-Yy-7y3"/>
-                        <segue destination="ieq-ft-5zA" kind="show" identifier="next" id="ALL-7d-h9x"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="efk-Fx-May" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2523.75" y="859.85915492957747"/>
+            <point key="canvasLocation" x="2520" y="1518"/>
         </scene>
         <!--Account Info View Controller-->
         <scene sceneID="AkK-Ry-3Ki">
@@ -487,7 +486,7 @@
                                     <action selector="next:" destination="L1Q-fK-MzU" eventType="touchUpInside" id="EWD-aZ-7tB"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Kl-BT-w3Z">
+                            <button hidden="YES" opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Kl-BT-w3Z">
                                 <rect key="frame" x="68" y="394" width="184" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="9Kl-BT-w3Z" secondAttribute="height" multiplier="184:29" id="TVt-wr-CCV"/>
@@ -513,7 +512,7 @@
                                 <rect key="frame" x="17" y="350" width="287" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                                 <connections>
                                     <outlet property="delegate" destination="L1Q-fK-MzU" id="TU9-EF-EwX"/>
                                 </connections>
@@ -690,7 +689,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="51A-Ja-n9e" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="N5p-te-mNb" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="4058" y="860"/>
+            <point key="canvasLocation" x="3210" y="860"/>
         </scene>
         <!--Distance View Controller-->
         <scene sceneID="rZG-PW-QoI">
@@ -737,7 +736,7 @@
                                     <action selector="next:" destination="ieq-ft-5zA" eventType="touchUpInside" id="Pgr-a8-sMd"/>
                                 </connections>
                             </button>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="eDO-Ie-iwP">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="eDO-Ie-iwP">
                                 <rect key="frame" x="16" y="321" width="292" height="30"/>
                                 <color key="tintColor" red="0.97633098198555324" green="0.090099693623572896" blue="0.99984457891246681" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -746,6 +745,9 @@
                                 <color key="minimumTrackTintColor" red="0.90588235859999999" green="0.29803922770000002" blue="0.23529411850000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="maximumTrackTintColor" red="0.57919406890000003" green="0.1280144453" blue="0.57268613580000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="thumbTintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="sliderMoved:" destination="ieq-ft-5zA" eventType="valueChanged" id="Uzn-fj-VAg"/>
+                                </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Miles" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bSN-m0-PVD">
                                 <rect key="frame" x="16" y="358" width="288" height="21"/>
@@ -762,6 +764,27 @@
                                 <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qen-Ud-cM8">
+                                <rect key="frame" x="18" y="406" width="24" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="24" id="yKk-fn-nbA"/>
+                                </constraints>
+                                <state key="normal" image="ic_check_box_outline_blank_white"/>
+                                <connections>
+                                    <action selector="checkMarkClicked:" destination="ieq-ft-5zA" eventType="touchUpInside" id="cSi-Xe-ZDb"/>
+                                    <action selector="checkMarkClicked:" destination="o9Y-Ec-50s" eventType="touchUpInside" id="wm9-7d-nym"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Distance does not matter, let's jam out!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VTu-Gk-epp">
+                                <rect key="frame" x="46" y="408" width="260" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="22" id="xYx-Bb-eTQ"/>
+                                    <constraint firstAttribute="width" constant="260" id="zIq-uB-azz"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="13"/>
+                                <color key="textColor" red="0.98958333330000003" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -772,22 +795,28 @@
                             <constraint firstItem="XS9-XO-cx3" firstAttribute="trailing" secondItem="bSN-m0-PVD" secondAttribute="trailing" id="AQ0-cf-0PO"/>
                             <constraint firstItem="bSN-m0-PVD" firstAttribute="top" secondItem="eDO-Ie-iwP" secondAttribute="bottom" constant="8" symbolic="YES" id="CWs-ka-EEF"/>
                             <constraint firstItem="EVa-dz-PaO" firstAttribute="bottom" secondItem="83m-gr-rfT" secondAttribute="bottom" id="Cpv-QF-ZHe"/>
+                            <constraint firstItem="VTu-Gk-epp" firstAttribute="top" secondItem="bSN-m0-PVD" secondAttribute="bottom" constant="29" id="HvZ-3e-KGA"/>
                             <constraint firstItem="Fht-Wt-jOc" firstAttribute="leading" secondItem="83m-gr-rfT" secondAttribute="leading" constant="85" id="JLu-tD-aPd"/>
                             <constraint firstItem="EVa-dz-PaO" firstAttribute="centerX" secondItem="bSN-m0-PVD" secondAttribute="centerX" id="Lql-uT-6jZ"/>
                             <constraint firstItem="wYs-7I-yQu" firstAttribute="top" secondItem="Fht-Wt-jOc" secondAttribute="bottom" constant="8" symbolic="YES" id="PL2-kX-L3V"/>
                             <constraint firstItem="Fht-Wt-jOc" firstAttribute="top" secondItem="83m-gr-rfT" secondAttribute="top" constant="24" id="U5n-bk-VAN"/>
                             <constraint firstItem="Fht-Wt-jOc" firstAttribute="centerX" secondItem="wYs-7I-yQu" secondAttribute="centerX" id="XeH-cd-1h6"/>
+                            <constraint firstItem="VTu-Gk-epp" firstAttribute="bottom" secondItem="qen-Ud-cM8" secondAttribute="bottom" id="bHx-Ba-top"/>
                             <constraint firstItem="XS9-XO-cx3" firstAttribute="leading" secondItem="bSN-m0-PVD" secondAttribute="leading" id="dTv-Y0-tEN"/>
                             <constraint firstItem="Fht-Wt-jOc" firstAttribute="centerX" secondItem="9e0-en-NGp" secondAttribute="centerX" id="gx0-Xg-zJF"/>
                             <constraint firstItem="EVa-dz-PaO" firstAttribute="leading" secondItem="9e0-en-NGp" secondAttribute="leading" id="oD0-ov-s7a"/>
+                            <constraint firstItem="VTu-Gk-epp" firstAttribute="leading" secondItem="qen-Ud-cM8" secondAttribute="trailing" constant="4" id="rQX-CH-cQ2"/>
                             <constraint firstItem="eDO-Ie-iwP" firstAttribute="leading" secondItem="wYs-7I-yQu" secondAttribute="leading" id="rlp-iP-vuO"/>
                             <constraint firstItem="eDO-Ie-iwP" firstAttribute="top" secondItem="XS9-XO-cx3" secondAttribute="bottom" constant="8" symbolic="YES" id="wdy-Nm-ieP"/>
                             <constraint firstItem="wYs-7I-yQu" firstAttribute="trailing" secondItem="9e0-en-NGp" secondAttribute="trailingMargin" id="wpg-BR-MQU"/>
+                            <constraint firstItem="VTu-Gk-epp" firstAttribute="trailing" secondItem="eDO-Ie-iwP" secondAttribute="trailing" id="yrj-iW-vAi"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="83m-gr-rfT"/>
                     </view>
                     <navigationItem key="navigationItem" id="PDc-W6-3wX"/>
                     <connections>
+                        <outlet property="checkImage" destination="qen-Ud-cM8" id="nfk-kj-8ql"/>
+                        <outlet property="distanceLabel" destination="XS9-XO-cx3" id="aEV-Zk-GFQ"/>
                         <outlet property="slider" destination="eDO-Ie-iwP" id="67Z-um-Euj"/>
                         <segue destination="o9Y-Ec-50s" kind="show" identifier="next" id="7tu-be-pRH"/>
                     </connections>
@@ -795,7 +824,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7GJ-fK-NsE" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="gFv-DX-7EZ" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3285" y="860"/>
+            <point key="canvasLocation" x="2520" y="860"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="chY-Qd-J4a">

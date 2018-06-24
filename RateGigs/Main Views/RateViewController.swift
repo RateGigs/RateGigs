@@ -68,14 +68,19 @@ class RateViewController: UIViewController {
     }
     
     @IBAction func next(_ sender: Any) {
+
+        soundwave.image = UIImage(named: "0")
+        rateIcon.image = UIImage(named: "r_0")
+        
         if(rateType == "fast"){
             //Used for concerts with RateGigs reps walking around
             fastRating()
-        }else if(rateType == "simple"){
-            self.performSegue(withIdentifier: "next", sender: nil)
             overallPerformaceRating = Double(ratingSlider.value)
+        }else if(rateType == "simple"){
+            overallPerformaceRating = Double(ratingSlider.value)
+            self.performSegue(withIdentifier: "next", sender: nil)
+           
         }else{
-            
             if(currentIndex < ratingOptions.count - 1){
                 switch(currentIndex){
                 case 0:
@@ -103,21 +108,23 @@ class RateViewController: UIViewController {
                 self.performSegue(withIdentifier: "next", sender: nil)
             }
         }
+
+        ratingSlider.value = 0
     }
     
     func fastRating(){
         if(artist){
-        self.ref.child("Artists")
-            .child(self.id)
-            .updateChildValues(["ratings_count": self.ratingsCount + 1])
+            self.ref.child("Artists")
+                .child(self.id)
+                .updateChildValues(["ratings_count": self.ratingsCount + 1])
         
-        self.ref.child("Artists")
-            .child(self.id)
-            .updateChildValues(["adjusted_rating": (currentRating + rating) / Double(self.ratingsCount + 1)])
+            self.ref.child("Artists")
+                .child(self.id)
+                .updateChildValues(["adjusted_rating": (currentRating + rating) / Double(self.ratingsCount + 1)])
         
-        self.ref.child("Artists")
-            .child(self.id)
-            .updateChildValues(["overall_rating": currentRating + rating])
+            self.ref.child("Artists")
+                .child(self.id)
+                .updateChildValues(["overall_rating": currentRating + rating])
         }else{
             self.ref.child("Venues")
                 .child(self.id)
@@ -131,6 +138,7 @@ class RateViewController: UIViewController {
                 .child(self.id)
                 .updateChildValues(["overall_rating": currentRating + rating])
         }
+        
         self.currentRating = currentRating + rating
         self.ratingsCount += 1
         
@@ -172,15 +180,11 @@ class RateViewController: UIViewController {
             vc.rateType = self.rateType
             vc.newRating = currentRating + rating
             
-            print(currentRating)
-            print(rating)
-            print(currentRating + rating)
-            
             vc.rawTalentRating = self.rawTalentRating
             vc.setListRating = self.setListRating
             vc.crowdEngagementRating = self.crowdEngagementRating
             vc.productionRating = self.productionRating
-            vc.overallPerformaceRating = self.overallPerformaceRating
+            vc.overallPerformanceRating = self.overallPerformaceRating
         }
     }
 }

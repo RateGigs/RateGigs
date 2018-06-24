@@ -8,10 +8,7 @@
 
 import UIKit
 import Firebase
-import Alamofire
-import SwiftyJSON
 import Foundation
-import JWT
 import RNCryptor
 import Cider
 
@@ -34,10 +31,6 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     }
     
     func encryptMessage(message: String, encryptionKey: String) -> Data {
-        //let data: NSData = ...
-//        let password = "Secret password"
-//        let ciphertext = RNCryptor.encrypt(data: data, withPassword: password)
-        
         let messageData = message.data(using: .utf8)!
         let cipherData = RNCryptor.encrypt(data: messageData, withPassword: encryptionKey)
         return cipherData

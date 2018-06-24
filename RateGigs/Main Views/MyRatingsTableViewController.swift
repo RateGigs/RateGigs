@@ -7,20 +7,129 @@
 //
 
 import UIKit
+import Firebase
 
 class Ratingcell : UITableViewCell{
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var descriptionLabel: UILabel!
     @IBOutlet var ratingLabel: UILabel!
+    @IBOutlet weak var ratingImage: UIImageView!
 }
 
 class MyRatingsTableViewController: UITableViewController {
 
+    var ref = DatabaseReference()
+    var ratings = [Rating]()
+
+    var selectedRating : Rating!
+
+    enum RatingType {
+        case artist
+        case venue
+    }
+
+    var ratingObject : RatingType!
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        ref = Database.database().reference()
+        loadReviews()
     }
-    
+
+    func loadReviews(){
+        if(ratingObject == .artist){
+            ref.child("users")
+                .child((Auth.auth().currentUser?.uid)!)
+                .child("Ratings")
+                .child("Artists")
+                .observe(.childAdded, with: { snapshot in
+
+                if(snapshot.exists()){
+                    let value = snapshot.value as? NSDictionary
+
+                    print(value)
+
+                    let ratingType : Double = (value?["ratingType"] as? Double)!
+                    print("Rating Type: \(ratingType)")
+                    let overallRating : Double = (value?["overall_rating"] as? Double)!
+                    let username : String = (value?["username"] as? String)!
+                    let body : String = (value?["rateBody"] as? String)!
+                    let artistName : String = (value?["artistName"] as? String)!
+
+                    var production = 0.0
+                    var crowdEngagement = 0.0
+                    var rawTalent = 0.0
+                    var setList = 0.0
+
+                    //In depth Rating
+                    if(ratingType == 1.0){
+                        production = (value?["production"] as? Double)!
+                        crowdEngagement = (value?["crowd_engagement"] as? Double)!
+
+                        rawTalent = (value?["raw_talent"] as? Double)!
+                        setList = (value?["set_list"] as? Double)!
+                    }
+
+                    let newRating = Rating(ratingType: Int(ratingType), setList: setList, rawTalent: rawTalent, production: production, crowdEngagement: crowdEngagement, overallRating: overallRating, username: username, body: body)
+
+                    newRating.artistName = artistName
+
+                    print("Adding Rating: " + newRating.toString())
+                    self.ratings.append(newRating)
+                    self.tableView.reloadData()
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+        }else{
+            ref.child("users")
+                .child((Auth.auth().currentUser?.uid)!)
+                .child("Ratings")
+                .child("Venues")
+                .observe(.childAdded, with: { snapshot in
+
+                    if(snapshot.exists()){
+                        let value = snapshot.value as? NSDictionary
+
+
+                        let ratingType : Double = (value?["ratingType"] as? Double)!
+                        print("Rating Type: \(ratingType)")
+                        let overallRating : Double = (value?["overall_rating"] as? Double)!
+                        let username : String = (value?["username"] as? String)!
+                        let body : String = (value?["rateBody"] as? String)!
+                        let artistName : String = (value?["artistName"] as? String)!
+
+                        var production = 0.0
+                        var crowdEngagement = 0.0
+                        var rawTalent = 0.0
+                        var setList = 0.0
+
+                        //In depth Rating
+                        if(ratingType == 1.0){
+                            production = (value?["production"] as? Double)!
+                            crowdEngagement = (value?["crowd_engagement"] as? Double)!
+
+                            rawTalent = (value?["raw_talent"] as? Double)!
+                            setList = (value?["set_list"] as? Double)!
+                        }
+
+                        let newRating = Rating(ratingType: Int(ratingType), setList: setList, rawTalent: rawTalent, production: production, crowdEngagement: crowdEngagement, overallRating: overallRating, username: username, body: body)
+
+                        newRating.artistName = artistName
+
+                        print("Adding Rating: " + newRating.toString())
+                        self.ratings.append(newRating)
+                        self.tableView.reloadData()
+                    }
+                }) { (error) in
+                    print(error.localizedDescription)
+            }
+        }
+    }
+
+
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -30,10 +139,12 @@ class MyRatingsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 10
+        return ratings.count
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedRating = ratings[indexPath.row]
+
         performSegue(withIdentifier: "myRating", sender: nil)
     }
     
@@ -44,55 +155,18 @@ class MyRatingsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell : Ratingcell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! Ratingcell
 
-        
-
+        print(ratings[indexPath.row].artistName)
+        cell.titleLabel.text = ratings[indexPath.row].artistName
+        cell.descriptionLabel.text = ratings[indexPath.row].body
+        cell.ratingImage.image = UIImage(named: "r_" + (Int(ratings[indexPath.row].overall_rating)).description)
         return cell
     }
- 
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+        if (segue.identifier == "myRating") {
+            let vc : SpecificRatingViewController = segue.destination as! SpecificRatingViewController
 
+            vc.curRating = selectedRating
+        }
+    }
 }

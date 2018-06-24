@@ -16,7 +16,11 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     @IBOutlet var artistsCollectionView: UICollectionView!
     var titles = ["Faster Horses", "Luke Bryan", "Blackbear"]
     var ref = DatabaseReference()
-    
+
+    @IBOutlet weak var reviewStatusLabel: UILabel!
+    var reviewsCount = 0
+
+    @IBOutlet weak var reviewsCountLabel: UILabel!
     @IBOutlet var venueCountLabel: UILabel!
     @IBOutlet var artistCountLabel: UILabel!
     
@@ -31,24 +35,80 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     var selectedArtistID = ""
     var selectedArtistKey = ""
     var selectedArtistName = ""
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+
+    var images = [String:UIImage]()
+    @IBOutlet weak var topRatedOne: UILabel!
+    @IBOutlet weak var topRatedTwo: UILabel!
+    @IBOutlet weak var topRatedOneImage: UIImageView!
+    @IBOutlet weak var topRatedTwoImage: UIImageView!
+
+    enum RatingType {
+        case artist
+        case venue
+    }
+
+    var selectedRating : Rating!
+
+    var ratingObject : RatingType!
+
+    override func viewWillAppear(_ animated: Bool) {
         ref = Database.database().reference()
+        reviewsCount = 0
         loadUserInfo()
         loadVenueReviews()
         loadArtistReviews()
+        loadImages()
+        loadTopRated()
     }
-    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+    }
+
+    func loadImages(){
+        ref.child("images")
+            .queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
+
+                for imageData in snapshot.children.allObjects as! [DataSnapshot] {
+                    let url = URL(string: imageData.value as! String)
+
+                    let data = try? Data(contentsOf: url!)
+                    let image = UIImage(data: data!)
+
+                    //Add the loaded image to the array
+                    self.images[imageData.key] = image
+                    self.artistsCollectionView.reloadData()
+                    self.venueCollectionView.reloadData()
+                }
+
+
+            }) { (error) in
+                print(error.localizedDescription)
+        }
+    }
+
+    func checkReviewStatus(){
+        if(reviewsCount < 10){
+            reviewStatusLabel.text = "Beginner Rater"
+        }else if(reviewsCount < 20){
+            reviewStatusLabel.text = "Rater In Training"
+        }else if(reviewsCount < 50){
+            reviewStatusLabel.text = "Genius Rater"
+        }else if(reviewsCount < 100){
+            reviewStatusLabel.text = "Sensei Rater"
+        }else{
+            reviewStatusLabel.text = "Rating Master"
+        }
+    }
+
     func loadUserInfo(){
         ref.child("users")
             .child((Auth.auth().currentUser?.uid)!)
             .queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
                 let postDict = snapshot.value as? [String : Any] ?? [:]
                 print(postDict)
-                let artistID : String = snapshot.key
                 let username = postDict["username"]
-                self.usernameLabel.text = username as! String
+                self.usernameLabel.text = username as? String
             
             }) { (error) in
                 print(error.localizedDescription)
@@ -61,17 +121,20 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             .child("Ratings")
             .child("Artists")
             .observe(.childAdded, with: { snapshot in
+                self.reviewsCount += 1
+                self.reviewsCountLabel.text = "\(self.reviewsCount.description) Reviews"
 
+                self.checkReviewStatus()
                 self.artistRatingKeys.append(snapshot.key)
                 
-                let enumerator = snapshot.children
-                while let rest = enumerator.nextObject() as? DataSnapshot {
-                    let artistName = rest.key
-                    let artistID = rest.value
+
+                    let postDict = snapshot.value as? [String : Any] ?? [:]
+                    let artistName: String = postDict["artistName"] as! String
+                    let artistID = postDict["artistID"]
                     
                     self.artistRatingIDs.append(artistID as! String)
                     self.artistRatingNames.append(artistName)
-                }
+
                 
                 self.artistCountLabel.text = "ARTISTS (" + self.artistRatingNames.count.description + ")"
                 self.artistsCollectionView.reloadData()
@@ -86,17 +149,18 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             .child("Ratings")
             .child("Venues")
             .observe(.childAdded, with: { snapshot in
-                
+                self.reviewsCount += 1
+                self.reviewsCountLabel.text = "\(self.reviewsCount.description) Reviews"
+
+                self.checkReviewStatus()
                 self.venueRatingKeys.append(snapshot.key)
                 
-                let enumerator = snapshot.children
-                while let rest = enumerator.nextObject() as? DataSnapshot {
-                    let venueName = rest.key
-                    let venueID = rest.value
-                    
-                    self.venuetRatingIDs.append(venueID as! String)
-                    self.venueRatingNames.append(venueName)
-                }
+                let postDict = snapshot.value as? [String : Any] ?? [:]
+                let artistName: String = postDict["artistName"] as! String
+                let artistID = postDict["artistID"]
+
+                self.venuetRatingIDs.append(artistID as! String)
+                self.venueRatingNames.append(artistName)
                 
                 self.venueCountLabel.text = "VENUES (" + self.venueRatingNames.count.description + ")"
                 self.venueCollectionView.reloadData()
@@ -107,19 +171,40 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if(collectionView.tag == 0){
+            if(artistRatingNames.count > 9){
+                return 9
+            }
             return artistRatingNames.count
         }else{
+            if(venueRatingNames.count > 9){
+                return 9
+            }
             return venueRatingNames.count
         }
-//        switch section {
-//        case 0:
-//            return artistRatingNames.count
-//        case 1:
-//            return venueRatingNames.count
-//        default:
-//            break
-//        }
-        return 10
+    }
+
+    func loadTopRated(){
+        topRatedTwo.adjustsFontSizeToFitWidth = true
+        topRatedOne.adjustsFontSizeToFitWidth = true
+        ref.child("users").child((Auth.auth().currentUser?.uid)!).child("Ratings").child("Artists")
+            .queryOrdered(byChild: "overall_rating").queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) -> Void in
+                let postDict = snapshot.value as? [String : Any] ?? [:]
+
+                let artistName : String = postDict["artistName"] as! String
+
+                self.topRatedOne.text = artistName
+                
+               // self.topRatedOneImage.image = self.images[snapshot.key]
+            })
+
+        ref.child("users").child((Auth.auth().currentUser?.uid)!).child("Ratings").child("Venues")
+            .queryOrdered(byChild: "overall_rating").queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) -> Void in
+                let postDict = snapshot.value as? [String : Any] ?? [:]
+                let artistName : String = postDict["artistName"] as! String
+
+                self.topRatedTwo.text = artistName
+             //   self.topRatedTwoImage.image = self.images[snapshot.key]
+            })
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -130,22 +215,25 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         collectionView.deselectItem(at: indexPath, animated: true)
         
         if(collectionView.tag == 0){
-            if(indexPath.row == 9){
+            if(indexPath.row == 8){
+                ratingObject = .artist
                 performSegue(withIdentifier: "more", sender: nil)
             }else{
                 
                 if(indexPath.section == 0){
+                    
                     print(artistRatingKeys[indexPath.row])
                     selectedArtistID = artistRatingIDs[indexPath.row]
                     selectedArtistKey = artistRatingKeys[indexPath.row]
                     selectedArtistName = artistRatingNames[indexPath.row]
-                    performSegue(withIdentifier: "showRating", sender: nil)
+                    
                 }else{
                     
                 }
             }
         }else{
-            if(indexPath.row == 9){
+            if(indexPath.row == 8){
+                ratingObject = .venue
                 performSegue(withIdentifier: "more", sender: nil)
             }else{
                 
@@ -154,7 +242,6 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                     selectedArtistID = venuetRatingIDs[indexPath.row]
                     selectedArtistKey = venueRatingKeys[indexPath.row]
                     selectedArtistName = venueRatingNames[indexPath.row]
-                    performSegue(withIdentifier: "showRating", sender: nil)
                 }else{
                     
                 }
@@ -163,24 +250,94 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         
     }
     
+    func loadRating(id: String){
+        ref.child("Artists").child(selectedArtistKey).child("Ratings").child(id).observeSingleEvent(of: .childAdded, with: { snapshot in
+            
+            if(snapshot.exists()){
+                let value = snapshot.value as? NSDictionary
+                let ratingType : Double = (value?["overall_rating"] as? Double)!
+                
+                let overallRating : Double = (value?["overall_rating"] as? Double)!
+                let username : String = (value?["username"] as? String)!
+                let body : String = (value?["rateBody"] as? String)!
+                var production = 0.0
+                var crowdEngagement = 0.0
+                var rawTalent = 0.0
+                var setList = 0.0
+                
+                //In depth Rating
+                if(ratingType == 1.0){
+                    production = (value?["overall_rating"] as? Double)!
+                    crowdEngagement = (value?["overall_rating"] as? Double)!
+                    
+                    rawTalent = (value?["overall_rating"] as? Double)!
+                    setList = (value?["overall_rating"] as? Double)!
+                }
+                
+                self.selectedRating = Rating(ratingType: Int(ratingType), setList: setList, rawTalent: rawTalent, production: production, crowdEngagement: crowdEngagement, overallRating: overallRating, username: username, body: body)
+                
+                self.performSegue(withIdentifier: "showRating", sender: nil)
+                
+            }
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if(indexPath.row < 9){
+        if(indexPath.row < 8){
             if(collectionView.tag == 0){
                 let cell : HomeCollectionViewCell = artistsCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! HomeCollectionViewCell
                 cell.textLabel.text = artistRatingNames[indexPath.row]
+                cell.image.image = images[artistRatingIDs[indexPath.row]]
                 return cell
             }else{
                 let cell : HomeCollectionViewCell = venueCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! HomeCollectionViewCell
                 cell.textLabel.text = venueRatingNames[indexPath.row]
+                switch(cell.textLabel.text?.lowercased()){
+                case "mopop":
+                    cell.image.image = UIImage(named: "mopop")
+                    break
+                case "prime":
+                    cell.image.image = UIImage(named: "prime")
+                    break
+                case "common ground":
+                    cell.image.image = UIImage(named: "commonground")
+                    break
+                case "breakaway":
+                    cell.image.image = UIImage(named: "breakaway")
+                    break
+                case "wayside central":
+                    cell.image.image = UIImage(named: "wayside")
+                    break
+                case "20 monroe life":
+                    cell.image.image = UIImage(named: "20monroe")
+                    break
+                case "lollapalooza":
+                    cell.image.image = UIImage(named: "lollapalooza")
+                    break
+                case "masonic temple":
+                    cell.image.image = UIImage(named: "masonictemple")
+                    break
+                default:
+                    break
+                }
                 return cell
             }
         
             
         }else{
-            let cell = artistsCollectionView.dequeueReusableCell(withReuseIdentifier: "more", for: indexPath) as UICollectionViewCell
+            if(collectionView.tag == 0){
+                let cell = artistsCollectionView.dequeueReusableCell(withReuseIdentifier: "more", for: indexPath) as! HomeCollectionViewCell
             
-            cell.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            return cell
+                cell.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                return cell
+            }else{
+                let cell = venueCollectionView.dequeueReusableCell(withReuseIdentifier: "more", for: indexPath) as! HomeCollectionViewCell
+
+                cell.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                return cell
+            }
         }
     }
     
@@ -191,7 +348,16 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             vc.artistID = selectedArtistID
             vc.ratingID = selectedArtistKey
             vc.artistName = self.selectedArtistName
-            
+        }else if (segue.identifier == "more") {
+            let vc : MyRatingsTableViewController = segue.destination as! MyRatingsTableViewController
+
+            if(ratingObject == .artist){
+                vc.ratingObject = .artist
+
+            }else{
+                vc.ratingObject = .venue
+
+            }
         }
     }
 }

@@ -25,6 +25,8 @@ class UsernameViewController: UIViewController, UITextFieldDelegate {
     override func viewWillAppear(_ animated: Bool) {
         finishButton.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         ref = Database.database().reference()
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -53,22 +55,14 @@ class UsernameViewController: UIViewController, UITextFieldDelegate {
         Auth.auth().createUser(withEmail: userInfo.email, password: userInfo.password) { (user, error) in
             if(error == nil){
                 self.ref.child("users")
-                .child((user?.uid)!)
+                .child((user?.user.uid)!)
                 .updateChildValues(["email" : self.userInfo.email,
                                     "username": self.userInfo.username,
                                     "distance": self.userInfo.distance,
                                     "important": self.userInfo.importantFactor])
                 
-                self.ref.child("users")
-                    .child((user?.uid)!)
-                    .child("artists")
-                    .updateChildValues(["artist_1": self.userInfo.artists[0],
-                                        "artist_2": self.userInfo.artists[1],
-                                        "artist_3": self.userInfo.artists[2]])
-                
                 self.navigationController?.popToRootViewController(animated: true)
             }else{
-                print(error)
             }
         }
         

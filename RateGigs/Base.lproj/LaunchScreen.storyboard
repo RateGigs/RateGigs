@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,14 +26,14 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="TEg-tp-X6B" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="-20" id="6Zg-SP-yej"/>
+                            <constraint firstItem="TEg-tp-X6B" firstAttribute="centerX" secondItem="oUK-Pg-SHb" secondAttribute="centerX" id="1KM-bg-Rs0"/>
+                            <constraint firstItem="TEg-tp-X6B" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="4Io-pP-Irw"/>
+                            <constraint firstItem="TEg-tp-X6B" firstAttribute="centerY" secondItem="oUK-Pg-SHb" secondAttribute="centerY" id="5zY-np-gdN"/>
                             <constraint firstItem="oUK-Pg-SHb" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Aar-4N-Ur2"/>
                             <constraint firstItem="oUK-Pg-SHb" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="I0C-1I-adp"/>
-                            <constraint firstItem="TEg-tp-X6B" firstAttribute="centerX" secondItem="oUK-Pg-SHb" secondAttribute="centerX" id="JDC-i7-WL7"/>
-                            <constraint firstItem="TEg-tp-X6B" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="YOr-sq-RCw"/>
                             <constraint firstItem="oUK-Pg-SHb" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="202" id="hwR-ls-SCJ"/>
                             <constraint firstItem="oUK-Pg-SHb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="102" id="nLP-b0-AbA"/>
-                            <constraint firstItem="TEg-tp-X6B" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="pF3-cx-2X9"/>
+                            <constraint firstItem="TEg-tp-X6B" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="q7X-5r-fFy"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

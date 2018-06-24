@@ -13,6 +13,7 @@ class ViewRatingTableViewCell: UITableViewCell {
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var ratingTextLabel: UILabel!
     @IBOutlet var ratingValueLabel: UILabel!
+    @IBOutlet weak var ratingImage: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

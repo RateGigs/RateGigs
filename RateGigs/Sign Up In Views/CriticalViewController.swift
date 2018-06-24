@@ -59,9 +59,8 @@ class CriticalViewController: UIViewController, UICollectionViewDataSource, UICo
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc : WhoListenViewController = segue.destination as! WhoListenViewController
+        let vc : DistanceViewController = segue.destination as! DistanceViewController
         user.importantFactor = selected
         vc.user = user
     }
-    
 }

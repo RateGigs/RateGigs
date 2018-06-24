@@ -165,7 +165,9 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
                                         let image = UIImage(data: data!)
                                         
                                         artist.setImage(image: image!)
-                    
+                                        
+                                        self.ref.child("images").child(id).setValue(url?.absoluteString)
+
                                         DispatchQueue.main.async {
                                             if(i == (artists?.count)! - 1){
                                                 self.hideLoader()
@@ -192,15 +194,6 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
     }
     
-    func loadArtists(string: String){
-        ref.child("artists").observeSingleEvent(of: .value, with: { (snapshot) in
-            let value = snapshot.value as? NSDictionary
-            let artistName = value?["name"] as? String ?? ""
-        }) { (error) in
-            print(error.localizedDescription)
-        }
-    }
-    
     func searchBarResultsListButtonClicked(_ searchBar: UISearchBar) {
         if(searching){
             searchString(string: searchBar.text!)
@@ -214,7 +207,7 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
 
         }else{
             searching = true
-            let stringToSearch = searchBar.text?.lowercased()
+//            let stringToSearch = searchBar.text?.lowercased()
             
             //filteredData = artists.filter({$0.lowercased().range(of: stringToSearch!) != nil})
             //tableView.reloadData()

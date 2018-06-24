@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B09E01320C9F46E00C31A69 /* Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B09E01220C9F46E00C31A69 /* Rating.swift */; };
+		9B59D15720CC0A3D0037945A /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B59D15620CC0A3D0037945A /* SettingsTableViewController.swift */; };
 		BC58EEDCCEE308A73043A329 /* Pods_RateGigs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 140C9800A2D4A3E812566658 /* Pods_RateGigs.framework */; };
 		D324D2081FDE1BDE00DA20D3 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D324D2071FDE1BDE00DA20D3 /* SearchController.swift */; };
 		D324D20A1FDE1CFB00DA20D3 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D324D2091FDE1CFB00DA20D3 /* SearchCell.swift */; };
@@ -56,6 +58,8 @@
 /* Begin PBXFileReference section */
 		140C9800A2D4A3E812566658 /* Pods_RateGigs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RateGigs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		720166E225DEFB4E7C26D218 /* Pods-RateGigs.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RateGigs.release.xcconfig"; path = "Pods/Target Support Files/Pods-RateGigs/Pods-RateGigs.release.xcconfig"; sourceTree = "<group>"; };
+		9B09E01220C9F46E00C31A69 /* Rating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rating.swift; sourceTree = "<group>"; };
+		9B59D15620CC0A3D0037945A /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		A9BD7F70860748053C09D4D9 /* Pods-RateGigs.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RateGigs.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RateGigs/Pods-RateGigs.debug.xcconfig"; sourceTree = "<group>"; };
 		C34C6C0416E354436A239F51 /* Pods_RateGigsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RateGigsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D324D2071FDE1BDE00DA20D3 /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
@@ -149,6 +153,8 @@
 				D38858F820292DB700854BAB /* ArtistViewController.swift */,
 				D38858FC202A4F9300854BAB /* MyRatingsTableViewController.swift */,
 				D360FCB120597F86002D7726 /* Artist.swift */,
+				9B09E01220C9F46E00C31A69 /* Rating.swift */,
+				9B59D15620CC0A3D0037945A /* SettingsTableViewController.swift */,
 			);
 			path = "Main Views";
 			sourceTree = "<group>";
@@ -239,7 +245,6 @@
 				D3C1DEE81FDDD12900793208 /* Frameworks */,
 				D3C1DEE91FDDD12900793208 /* Resources */,
 				A394B532C15854B0F9F79463 /* [CP] Embed Pods Frameworks */,
-				0BD5CC14E536354B2F5C9B57 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -331,21 +336,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0BD5CC14E536354B2F5C9B57 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RateGigs/Pods-RateGigs-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		A394B532C15854B0F9F79463 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -353,27 +343,21 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-RateGigs/Pods-RateGigs-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Cider/Cider.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/JSONWebToken/JWT.framework",
 				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCryptor/RNCryptor.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cider.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JWT.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NVActivityIndicatorView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCryptor.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
@@ -419,6 +403,7 @@
 				D324D21A1FDF30BF00DA20D3 /* HomeCollectionViewCell.swift in Sources */,
 				D3C76E2120032840001C77AE /* RateViewController.swift in Sources */,
 				D3C1DEEF1FDDD12900793208 /* AppDelegate.swift in Sources */,
+				9B59D15720CC0A3D0037945A /* SettingsTableViewController.swift in Sources */,
 				D3C76E2520050B6A001C77AE /* ViewRatingsTableViewController.swift in Sources */,
 				D360BC5B20197DA6005D8ED4 /* FeedbackViewController.swift in Sources */,
 				D38858F920292DB800854BAB /* ArtistViewController.swift in Sources */,
@@ -427,6 +412,7 @@
 				D341DCAA20081FF0004053E1 /* ImageViewMasked.swift in Sources */,
 				D3C1DEF11FDDD12900793208 /* HomePage.swift in Sources */,
 				D3C76E292005108B001C77AE /* SpecificRatingViewController.swift in Sources */,
+				9B09E01320C9F46E00C31A69 /* Rating.swift in Sources */,
 				D3E92F78202F7752002A98C9 /* DistanceViewController.swift in Sources */,
 				D3C76E2720050BF0001C77AE /* ViewRatingTableViewCell.swift in Sources */,
 				D324D2121FDE497900DA20D3 /* ProfileViewController.swift in Sources */,
@@ -588,11 +574,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7AWX52SKH6;
+				DEVELOPMENT_TEAM = LTHQU39F8Q;
 				INFOPLIST_FILE = RateGigs/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.scrappytech.rategigs;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rategigs.rategigs;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -605,11 +591,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7AWX52SKH6;
+				DEVELOPMENT_TEAM = LTHQU39F8Q;
 				INFOPLIST_FILE = RateGigs/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.scrappytech.rategigs;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rategigs.rategigs;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

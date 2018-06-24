@@ -19,10 +19,12 @@ class ArtistViewController: UIViewController {
     var ratingsCount = 0
     var currentOverallRating = 0.0
     var artist = false
-    
+
+    var headerImage: UIImage!
+    @IBOutlet weak var headerImageView: UIImageView!
+
     @IBOutlet var soundwave: UIImageView!
     var ref = DatabaseReference()
-    
     @IBOutlet var ratingLabel: UILabel!
     @IBOutlet var rateButton: UIButton!
     @IBOutlet var viewRatingsButton: UIButton!
@@ -31,7 +33,9 @@ class ArtistViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         
         ref = Database.database().reference()
-        
+
+        headerImageView.image = headerImage
+
         titleLabel.text = artistName
         rateButton.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         viewRatingsButton.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -111,7 +115,7 @@ class ArtistViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:{ (UIAlertAction)in
             
             let textField = alert.textFields![0] as UITextField
-            if(textField.text == "0000"){
+            if(textField.text == "1975"){
                 self.ratingType = "fast"
                 self.performSegue(withIdentifier: "rate", sender: nil)
             }
@@ -175,11 +179,11 @@ class ArtistViewController: UIViewController {
             vc.rateType = self.ratingType
         }else{
             let vc : PageInfoViewController = segue.destination as! PageInfoViewController
+            vc.artistKey = self.artistID
             vc.artistName = self.artistName
+            vc.isArtist = self.artist
         }
     }
- 
-
 }
 
 extension Double {

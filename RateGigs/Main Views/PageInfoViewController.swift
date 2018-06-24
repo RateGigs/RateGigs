@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class PageInfoViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -15,12 +16,61 @@ class PageInfoViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet var tableView: UITableView!
     @IBOutlet var titleLabel: UILabel!
     
+    var artistKey = ""
     var artistName = ""
-    
-    var ratings = [String]()
+    var ref = DatabaseReference()
+    var ratings = [Rating]()
+    var isArtist = false
+    var selectedRating : Rating!
     
     override func viewWillAppear(_ animated: Bool) {
         titleLabel.text = artistName
+        self.ratings = []
+        self.tableView.reloadData()
+        
+        ref = Database.database().reference()
+        
+        var path = ""
+        if(isArtist){
+            path = "Artists"
+        }else{
+            path = "Venues"
+        }
+        
+        ref.child(path).child(artistKey).child("Ratings").observe(.childAdded, with: { snapshot in
+                
+                if(snapshot.exists()){
+                    let value = snapshot.value as? NSDictionary
+                    
+
+                    let ratingType : Double = (value?["ratingType"] as? Double)!
+                    let overallRating : Double = (value?["overall_rating"] as? Double)!
+                    let username : String = (value?["username"] as? String)!
+                    let body : String = (value?["rateBody"] as? String)!
+                    var production = 0.0
+                    var crowdEngagement = 0.0
+                    var rawTalent = 0.0
+                    var setList = 0.0
+                    
+                    //In depth Rating
+                    if(ratingType == 1.0){
+                        production = (value?["production"] as? Double)!
+                        crowdEngagement = (value?["crowd_engagement"] as? Double)!
+                        
+                        rawTalent = (value?["raw_talent"] as? Double)!
+                        setList = (value?["set_list"] as? Double)!
+                    }
+                    
+                    let newRating = Rating(ratingType: Int(ratingType), setList: setList, rawTalent: rawTalent, production: production, crowdEngagement: crowdEngagement, overallRating: overallRating, username: username, body: body)
+                    
+                    print("Adding Rating: " + newRating.toString())
+                    self.ratings.append(newRating)
+                    
+                    self.tableView.reloadData()
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+        }
     }
     
     override func viewDidLoad() {
@@ -56,7 +106,9 @@ class PageInfoViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if(ratings.count > 0){
             let cell : ViewRatingTableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ViewRatingTableViewCell
-            
+            cell.nameLabel.text = ratings[indexPath.row].username
+            cell.ratingTextLabel.text = ratings[indexPath.row].body
+            cell.ratingImage.image = UIImage(named: "r_" + (Int(ratings[indexPath.row].overall_rating)).description)
             return cell
         }
         
@@ -87,8 +139,9 @@ class PageInfoViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-       
-         performSegue(withIdentifier: "viewRating", sender: nil)
+        self.selectedRating = ratings[indexPath.row]
+        print(selectedRating.toString())
+        performSegue(withIdentifier: "viewRating", sender: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -98,7 +151,8 @@ class PageInfoViewController: UIViewController, UITableViewDelegate, UITableView
             vc.artistName = artistName
         }else{
             let vc : SpecificRatingViewController = segue.destination as! SpecificRatingViewController
-            vc.artistName = artistName
+            vc.artistName = self.artistName
+            vc.curRating = self.selectedRating
         }
     }
 }
