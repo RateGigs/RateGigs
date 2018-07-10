@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import IQKeyboardManagerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,7 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use Firebase library to configure APIs
         FirebaseApp.configure()
 
-        
+        IQKeyboardManager.shared.enable = true
+
         UINavigationBar.appearance().tintColor = UIColor.white
         UIApplication.shared.statusBarStyle = .lightContent
 

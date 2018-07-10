@@ -30,20 +30,43 @@ class SettingsTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 1
+        if(section == 0){
+            return 1
+        }
+
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        do {
-            try Auth.auth().signOut()
-            self.performSegue(withIdentifier: "LoginSignup", sender: nil)
-        } catch let signOutError as NSError {
-            print ("Error signing out: %@", signOutError)
+
+        tableView.deselectRow(at: indexPath, animated: true)
+        if(indexPath.section == 0){
+            do {
+                try Auth.auth().signOut()
+                self.performSegue(withIdentifier: "LoginSignup", sender: nil)
+            } catch let signOutError as NSError {
+                print ("Error signing out: %@", signOutError)
+            }
+        }else{
+            switch indexPath.row {
+            case 0:
+
+                UIApplication.shared.openURL(URL(string: "https://www.instagram.com/rategigs/")!)
+                break
+            case 1:
+                UIApplication.shared.openURL(URL(string: "https://www.facebook.com/RateGigs/")!)
+                break
+            case 2:
+                UIApplication.shared.openURL(URL(string: "https://twitter.com/rategigs")!)
+                break
+            default:
+                break
+            }
         }
     }
     /*

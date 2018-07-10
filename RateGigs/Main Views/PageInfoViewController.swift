@@ -47,6 +47,8 @@ class PageInfoViewController: UIViewController, UITableViewDelegate, UITableView
                     let overallRating : Double = (value?["overall_rating"] as? Double)!
                     let username : String = (value?["username"] as? String)!
                     let body : String = (value?["rateBody"] as? String)!
+                    let location : String = (value?["location"] as? String)!
+                    let date : String = (value?["date"] as? String)!
                     var production = 0.0
                     var crowdEngagement = 0.0
                     var rawTalent = 0.0
@@ -61,7 +63,7 @@ class PageInfoViewController: UIViewController, UITableViewDelegate, UITableView
                         setList = (value?["set_list"] as? Double)!
                     }
                     
-                    let newRating = Rating(ratingType: Int(ratingType), setList: setList, rawTalent: rawTalent, production: production, crowdEngagement: crowdEngagement, overallRating: overallRating, username: username, body: body)
+                    let newRating = Rating(ratingType: Int(ratingType), setList: setList, rawTalent: rawTalent, production: production, crowdEngagement: crowdEngagement, overallRating: overallRating, username: username, body: body, location: location, date: date)
                     
                     print("Adding Rating: " + newRating.toString())
                     self.ratings.append(newRating)

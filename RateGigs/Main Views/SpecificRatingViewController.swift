@@ -38,6 +38,8 @@ class SpecificRatingViewController: UIViewController, UICollectionViewDataSource
     @IBOutlet weak var bodyView: UITextView!
     @IBOutlet var soundwave: UIImageView!
     
+    @IBOutlet weak var locationDateLabel: UILabel!
+
     override func viewWillAppear(_ animated: Bool) {
         titleLabel.text = artistName
         
@@ -51,7 +53,8 @@ class SpecificRatingViewController: UIViewController, UICollectionViewDataSource
         ratingType = curRating.ratingType
         
         loadArtist()
-        
+
+        locationDateLabel.text = curRating.date + " // " + curRating.location
         usernameLabel.text = username
         bodyView.text = body
         ref = Database.database().reference()

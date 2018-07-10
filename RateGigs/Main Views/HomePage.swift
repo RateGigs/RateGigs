@@ -53,6 +53,7 @@ class HomePage: UIViewController, UICollectionViewDelegate, UICollectionViewData
         
         if(!loaded){
             loadUpAndComingData()
+            loadArtistData()
         }
         
         self.tabBarController?
@@ -63,10 +64,6 @@ class HomePage: UIViewController, UICollectionViewDelegate, UICollectionViewData
         let image = #imageLiteral(resourceName: "Rate_Gigs_White_Small")
         imageView.image = image
         navigationItem.titleView = imageView
-        
-        if(!loaded){
-            loadArtistData()
-        }
     }
     
     func hideCollectionViews(){
@@ -93,17 +90,15 @@ class HomePage: UIViewController, UICollectionViewDelegate, UICollectionViewData
     }
     
     func loadImage(id: String){
-        ref.child("images")
+        ref.child("images").child(id)
             .queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
-
-                for imageData in snapshot.children.allObjects as! [DataSnapshot] {
-                    let url = URL(string: imageData.value as! String)
+                    let url = URL(string: snapshot.value as! String)
 
                     let data = try? Data(contentsOf: url!)
                     let image = UIImage(data: data!)
 
                     //Add the loaded image to the array
-                    self.artistImages[imageData.key] = image
+                    self.artistImages[snapshot.key] = image
 
                     if(self.artistImages.count == 5){
                         self.showCollectionView()
@@ -113,48 +108,9 @@ class HomePage: UIViewController, UICollectionViewDelegate, UICollectionViewData
                         self.upAndComing.reloadData()
                         self.topRatedArtists.reloadData()
                     }
-                }
-
-
             }) { (error) in
                 print(error.localizedDescription)
         }
-
-//        DispatchQueue.global(qos: .default).async(execute: {
-//            self.cider.artist(id: id) { result, error in
-//                let albumID = result?.relationships?.albums.data?.first?.id
-//                if(albumID != nil){
-//                    self.cider.album(id: albumID!) { result, error in
-//                        let album = result
-//
-//                        if(album != nil){
-//                            let url = album?.attributes?.artwork.url(forWidth: 130)
-//
-//                            let data = try? Data(contentsOf: url!)
-//                            let image = UIImage(data: data!)
-//
-//                            DispatchQueue.main.async {
-//                                self.topRatedArtists.reloadData()
-//                            }
-//
-//                            //Add the loaded image to the array
-//                            self.artistImages[id] = image
-//
-//                            if(self.artistImages.count == 5){
-//                                self.showCollectionView()
-//                            }
-//
-//                            self.ref.child("images").child(id).setValue(url?.absoluteString)
-//
-//                            DispatchQueue.main.async {
-//                                self.upAndComing.reloadData()
-//                                self.topRatedArtists.reloadData()
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        })
 
         DispatchQueue.main.async(execute: {
             self.showCollectionView()
@@ -169,6 +125,10 @@ class HomePage: UIViewController, UICollectionViewDelegate, UICollectionViewData
                 self.upAndComingTitles.append(artistName)
                 self.upAndComingKeys.append(snapshot.key)
                 self.upAndComingTitles.reverse()
+
+                DispatchQueue.main.async { // 2
+                    self.loadImage(id: snapshot.key)
+                }
             
                 self.upAndComing.reloadData()
             })
@@ -183,7 +143,10 @@ class HomePage: UIViewController, UICollectionViewDelegate, UICollectionViewData
             let artistID : String = snapshot.key
             let artistName : String = postDict["name"] as! String
                 
-            self.loadImage(id: artistID)
+            DispatchQueue.main.async { // 2
+                self.loadImage(id: artistID)
+            }
+
             self.keys.reverse()
             self.keys.append(artistID)
             self.keys.reverse()
@@ -250,7 +213,35 @@ class HomePage: UIViewController, UICollectionViewDelegate, UICollectionViewData
         case 2:
             selectedArtist = festivals[indexPath.row]
             selectedArtistID = Vkeys[indexPath.row]
-            selectedImage = artistImages[selectedArtistID]
+            switch(selectedArtist.lowercased()){
+            case "mo pop":
+               selectedImage = UIImage(named: "mopop")
+                break
+            case "prime":
+                selectedImage = UIImage(named: "prime")
+                break
+            case "common ground":
+                selectedImage = UIImage(named: "commonground")
+                break
+            case "breakaway":
+                selectedImage = UIImage(named: "breakaway")
+                break
+            case "wayside central":
+                selectedImage = UIImage(named: "wayside")
+                break
+            case "20 monroe live":
+                selectedImage = UIImage(named: "20monroe")
+                break
+            case "masonic temple":
+                selectedImage = UIImage(named: "masonictemple")
+                break
+            case "lollapalooza":
+               selectedImage = UIImage(named: "lollapalooza")
+                break
+
+            default:
+                break
+            }
 
             artist = false
         default:
@@ -284,8 +275,10 @@ class HomePage: UIViewController, UICollectionViewDelegate, UICollectionViewData
             cell.textLabel.minimumScaleFactor = 0.1
             cell.textLabel.text = upAndComingTitles[indexPath.row]
 
-            cell.image.image = artistImages[upAndComingKeys[indexPath.row]]
-
+            if(artistImages.count > indexPath.row){
+                cell.image.image = artistImages[upAndComingKeys[indexPath.row]]
+            }
+            
             return cell
         case 1:
             let cell : HomeCollectionViewCell = topRatedArtists.dequeueReusableCell(withReuseIdentifier: "artistCell", for: indexPath) as! HomeCollectionViewCell
@@ -307,7 +300,7 @@ class HomePage: UIViewController, UICollectionViewDelegate, UICollectionViewData
             cell.textLabel.text = festivals[indexPath.row]
 
             switch(cell.textLabel.text?.lowercased()){
-            case "mopop":
+            case "mo pop":
                 cell.image.image = UIImage(named: "mopop")
                 break
             case "prime":
@@ -322,7 +315,7 @@ class HomePage: UIViewController, UICollectionViewDelegate, UICollectionViewData
             case "wayside central":
                 cell.image.image = UIImage(named: "wayside")
                 break
-            case "20 monroe life":
+            case "20 monroe live":
                 cell.image.image = UIImage(named: "20monroe")
                 break
             case "masonic temple":

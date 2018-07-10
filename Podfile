@@ -13,6 +13,7 @@ pod 'Firebase/Database'
 pod 'RNCryptor', '~> 5.0'
 pod 'Cider', '~> 0.10'
 pod 'NVActivityIndicatorView'
+pod 'IQKeyboardManagerSwift'
 
 end
 

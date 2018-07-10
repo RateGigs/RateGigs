@@ -177,6 +177,7 @@ class ArtistViewController: UIViewController {
             vc.artistName = self.artistName
             vc.ratingsCount = self.ratingsCount
             vc.rateType = self.ratingType
+            vc.headerImage = self.headerImage
         }else{
             let vc : PageInfoViewController = segue.destination as! PageInfoViewController
             vc.artistKey = self.artistID

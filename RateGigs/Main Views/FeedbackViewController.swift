@@ -28,6 +28,10 @@ class FeedbackViewController: UIViewController, UITextViewDelegate{
     var overallPerformanceRating : Double = 0.0
     var username = ""
     var rateType = ""
+    var headerImage = UIImage()
+
+    @IBOutlet weak var headerImageView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +41,9 @@ class FeedbackViewController: UIViewController, UITextViewDelegate{
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        titleLabel.text = artistName
+        headerImageView.image = headerImage
+        
         ref.child("users")
             .child((Auth.auth().currentUser?.uid)!)
             .queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
@@ -67,9 +74,62 @@ class FeedbackViewController: UIViewController, UITextViewDelegate{
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if(textView.text == "Write your review..."){
+            textView.text = ""
+        }
+    }
 
     @IBAction func submit(_ sender: Any) {
+        if(artist){
+            let alert = UIAlertController(title: "Location", message: "Please enter the venue/location you saw this artist perform.", preferredStyle:
+                UIAlertControllerStyle.alert)
+
+            alert.addTextField(configurationHandler: textFieldHandler)
+
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:{ (UIAlertAction)in
+
+                let textField = alert.textFields![0] as UITextField
+
+                self.writeData(location: textField.text!)
+            }))
+
+            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:{ (UIAlertAction)in
+            }))
+
+            self.present(alert, animated: true, completion:nil)
+        }else{
+            let alert = UIAlertController(title: "Location", message: "Please enter the location you attended this venue.", preferredStyle:
+                UIAlertControllerStyle.alert)
+
+            alert.addTextField(configurationHandler: textFieldHandler)
+
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:{ (UIAlertAction)in
+
+                let textField = alert.textFields![0] as UITextField
+
+                self.writeData(location: textField.text!)
+            }))
+
+            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:{ (UIAlertAction)in
+            }))
+
+            self.present(alert, animated: true, completion:nil)
+        }
+    }
+
+    func textFieldHandler(textField: UITextField!)
+    {
+    }
+
+    func writeData(location: String){
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateStyle = DateFormatter.Style.short
+        formatter.timeStyle = .none
+
+        let dateString = formatter.string(from: date)
 
         if(!checkBody()){
             self.ratingsCount += 1
@@ -88,6 +148,8 @@ class FeedbackViewController: UIViewController, UITextViewDelegate{
                                 "username" : username,
                                 "artistID" : artistID,
                                 "artistName" : artistName,
+                                "location" : location,
+                                "date" : dateString,
                                 "timeStamp" : NSDate().timeIntervalSince1970,
                                 "ratingType" : 0] as [String : Any]
 
@@ -111,6 +173,8 @@ class FeedbackViewController: UIViewController, UITextViewDelegate{
                                 "production" : productionRating,
                                 "rateBody" : bodyView.text,
                                 "username" : username,
+                                "date" : dateString,
+                                "location" : location,
                                 "timeStamp" : NSDate().timeIntervalSince1970,
                                 "artistID" : artistID,
                                 "artistName" : artistName,

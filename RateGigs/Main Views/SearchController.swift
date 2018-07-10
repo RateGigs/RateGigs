@@ -22,8 +22,10 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet var loaderView: NVActivityIndicatorView!
     var selectedArtist = ""
     var artistID = ""
+    var selectedImage = UIImage()
     var searching = false
-    
+
+
     let developerToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkpQN0tYN0w1ODgifQ.eyJpc3MiOiI3QVdYNTJTS0g2IiwiaWF0IjoxNTIwOTUwMjQ2LCJleHAiOjE1MzY3MTgyNDZ9.k31wi4pfS4MAoUaXF1WCkMVRFaksLw2IF1waQP5N1EOIcM9I8cHDhTyIZQgMY6uPyXBREIEJhA0pHbYMG2eePA"
     var cider : CiderClient!
     
@@ -98,8 +100,10 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
         if(searching){
             selectedArtist = filteredSearch[indexPath.row].name
             artistID = filteredSearch[indexPath.row].id
+            selectedImage = filteredSearch[indexPath.row].image
         }else{
             selectedArtist = filteredSearch[indexPath.row].name
+            selectedImage = filteredSearch[indexPath.row].image
         }
         
         self.performSegue(withIdentifier: "profile", sender: nil)
@@ -110,6 +114,7 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
             let vc = segue.destination as! ArtistViewController
             vc.artistName = selectedArtist
             vc.artistID = self.artistID
+            vc.headerImage = self.selectedImage
             vc.artist = true
         }
     }
@@ -159,7 +164,7 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
                                     
                                     print("FOUND: " + (album?.attributes?.name)!)
                                     if(album != nil){
-                                        let url = album?.attributes?.artwork.url(forWidth: 80)
+                                        let url = album?.attributes?.artwork.url(forWidth: 200)
                                         
                                         let data = try? Data(contentsOf: url!)
                                         let image = UIImage(data: data!)
@@ -214,125 +219,4 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
     }
 }
-
-////
-//  SearchController.swift
-//  RateGigs
-//
-//  Created by Bryan Caragay on 12/10/17.
-//  Copyright © 2017 Scrappy Technologies. All rights reserved.
-//
-//
-//import UIKit
-//import Foundation
-//import FirebaseDatabase
-//
-//
-//class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
-//
-//    var ref = DatabaseReference()
-//
-//    @IBOutlet var searchBar: UISearchBar!
-//    @IBOutlet var tableView: UITableView!
-//
-//    var selectedArtist = ""
-//    var searching = false
-//
-//    var dict = [String:String]()
-//
-//    var artists : [String] = ["Luke Bryan", "Coldplay", "Jeremy Zucker", "AJR", "All Time Low", "Ariana Grande", "Avicii", "Billy Joel", "Bon Jovi", "Ed Sheeran"]
-//
-//    var filteredData = [String]()
-//
-//
-//    override func viewWillAppear(_ animated: Bool) {
-//        artists = []
-//        tableView.reloadData()
-//
-//        loadArtists()
-//    }
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        searchBar.delegate = self
-//        searchBar.returnKeyType = .default
-//        ref = Database.database().reference()
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell : SearchCell = tableView.dequeueReusableCell(withIdentifier: "cell") as! SearchCell
-//
-//        if(searching){
-//            cell.mainText.text = filteredData[indexPath.row]
-//        }else{
-//            cell.mainText.text = artists[indexPath.row]
-//        }
-//        cell.subText.text = "Artist"
-//
-//        return cell
-//    }
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if(searching){
-//            return filteredData.count
-//        }else{
-//            // return 10
-//        }
-//    }
-//
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 1
-//    }
-//
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
-//
-//        if(searching){
-//            selectedArtist = filteredData[indexPath.row]
-//        }else{
-//            selectedArtist = artists[indexPath.row]
-//        }
-//        print(dict[selectedArtist])
-//        self.performSegue(withIdentifier: "profile", sender: nil)
-//    }
-//
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if(segue.identifier == "profile"){
-//            let vc = segue.destination as! ArtistViewController
-//            vc.artistName = selectedArtist
-//        }
-//    }
-//
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 59
-//    }
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        searchBar.endEditing(true)
-//    }
-//
-//    func textFieldShouldReturn(textField: UITextField) -> Bool {
-//        self.view.endEditing(true)
-//        return true;
-//    }
-//
-//    func loadArtists(){
-//    }
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if(searchBar.text == "" || searchBar.text == nil){
-//            searching = false
-//            tableView.reloadData()
-//
-//        }else{
-//            searching = true
-//            let stringToSearch = searchBar.text?.lowercased()
-//
-//
-//
-//            filteredData = artists.filter({$0.lowercased().range(of: stringToSearch!) != nil})
-//            tableView.reloadData()
-//        }
-//    }
-//}
 

@@ -31,10 +31,14 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     var venueRatingKeys = [String]()
     var venueRatingNames = [String]()
     var venuetRatingIDs = [String]()
-    
+
+    var artistRatings = [Rating]()
+    var venueRatings = [Rating]()
+
     var selectedArtistID = ""
     var selectedArtistKey = ""
     var selectedArtistName = ""
+    var selectedRating: Rating!
 
     var images = [String:UIImage]()
     @IBOutlet weak var topRatedOne: UILabel!
@@ -47,11 +51,13 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         case venue
     }
 
-    var selectedRating : Rating!
-
     var ratingObject : RatingType!
 
     override func viewWillAppear(_ animated: Bool) {
+
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
         ref = Database.database().reference()
         reviewsCount = 0
         loadUserInfo()
@@ -60,12 +66,11 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         loadImages()
         loadTopRated()
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-    }
 
     func loadImages(){
+        print("LoadImages:")
+        let methodStart = Date()
+
         ref.child("images")
             .queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
 
@@ -85,6 +90,10 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             }) { (error) in
                 print(error.localizedDescription)
         }
+
+        let methodFinish = Date()
+        let executionTime = methodFinish.timeIntervalSince(methodStart)
+        print("Execution time: \(executionTime)")
     }
 
     func checkReviewStatus(){
@@ -102,20 +111,29 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
 
     func loadUserInfo(){
+        print("LoadUserInfo:")
+        let methodStart = Date()
+
         ref.child("users")
             .child((Auth.auth().currentUser?.uid)!)
             .queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
                 let postDict = snapshot.value as? [String : Any] ?? [:]
-                print(postDict)
                 let username = postDict["username"]
                 self.usernameLabel.text = username as? String
             
             }) { (error) in
                 print(error.localizedDescription)
             }
+
+        let methodFinish = Date()
+        let executionTime = methodFinish.timeIntervalSince(methodStart)
+        print("Execution time: \(executionTime)")
     }
     
     func loadArtistReviews(){
+        print("LoadArtistReviews:")
+        let methodStart = Date()
+
         ref.child("users")
             .child((Auth.auth().currentUser?.uid)!)
             .child("Ratings")
@@ -128,22 +146,57 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                 self.artistRatingKeys.append(snapshot.key)
                 
 
-                    let postDict = snapshot.value as? [String : Any] ?? [:]
-                    let artistName: String = postDict["artistName"] as! String
-                    let artistID = postDict["artistID"]
-                    
-                    self.artistRatingIDs.append(artistID as! String)
-                    self.artistRatingNames.append(artistName)
+                let postDict = snapshot.value as? [String : Any] ?? [:]
+                let artistName: String = postDict["artistName"] as! String
+                let artistID = postDict["artistID"]
 
-                
+                self.artistRatingIDs.append(artistID as! String)
+                self.artistRatingNames.append(artistName)
+
                 self.artistCountLabel.text = "ARTISTS (" + self.artistRatingNames.count.description + ")"
                 self.artistsCollectionView.reloadData()
+
+                let value = snapshot.value as? NSDictionary
+
+                let ratingType : Double = (value?["ratingType"] as? Double)!
+                print("Rating Type: \(ratingType)")
+                let overallRating : Double = (value?["overall_rating"] as? Double)!
+                let username : String = (value?["username"] as? String)!
+                let body : String = (value?["rateBody"] as? String)!
+                let name : String = (value?["artistName"] as? String)!
+                let location : String = (value?["location"] as? String)!
+                let date : String = (value?["date"] as? String)!
+                var production = 0.0
+                var crowdEngagement = 0.0
+                var rawTalent = 0.0
+                var setList = 0.0
+
+                //In depth Rating
+                if(ratingType == 1.0){
+                    production = (value?["production"] as? Double)!
+                    crowdEngagement = (value?["crowd_engagement"] as? Double)!
+
+                    rawTalent = (value?["raw_talent"] as? Double)!
+                    setList = (value?["set_list"] as? Double)!
+                }
+
+                let newRating = Rating(ratingType: Int(ratingType), setList: setList, rawTalent: rawTalent, production: production, crowdEngagement: crowdEngagement, overallRating: overallRating, username: username, body: body,  location: location, date: date)
+                newRating.artistName = name
+
+                self.artistRatings.append(newRating)
             }) { (error) in
                 print(error.localizedDescription)
         }
+
+        let methodFinish = Date()
+        let executionTime = methodFinish.timeIntervalSince(methodStart)
+        print("Execution time: \(executionTime)")
     }
     
     func loadVenueReviews(){
+        print("LoadVenueReviews:")
+        let methodStart = Date()
+
         ref.child("users")
             .child((Auth.auth().currentUser?.uid)!)
             .child("Ratings")
@@ -164,9 +217,42 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                 
                 self.venueCountLabel.text = "VENUES (" + self.venueRatingNames.count.description + ")"
                 self.venueCollectionView.reloadData()
+
+                let value = snapshot.value as? NSDictionary
+
+                let ratingType : Double = (value?["ratingType"] as? Double)!
+                print("Rating Type: \(ratingType)")
+                let overallRating : Double = (value?["overall_rating"] as? Double)!
+                let username : String = (value?["username"] as? String)!
+                let body : String = (value?["rateBody"] as? String)!
+                let name : String = (value?["artistName"] as? String)!
+                let location : String = (value?["location"] as? String)!
+                let date : String = (value?["date"] as? String)!
+                var production = 0.0
+                var crowdEngagement = 0.0
+                var rawTalent = 0.0
+                var setList = 0.0
+
+                //In depth Rating
+                if(ratingType == 1.0){
+                    production = (value?["production"] as? Double)!
+                    crowdEngagement = (value?["crowd_engagement"] as? Double)!
+
+                    rawTalent = (value?["raw_talent"] as? Double)!
+                    setList = (value?["set_list"] as? Double)!
+                }
+
+                let newRating = Rating(ratingType: Int(ratingType), setList: setList, rawTalent: rawTalent, production: production, crowdEngagement: crowdEngagement, overallRating: overallRating, username: username, body: body,  location: location, date: date)
+                newRating.artistName = name
+
+                self.venueRatings.append(newRating)
             }) { (error) in
                 print(error.localizedDescription)
         }
+
+        let methodFinish = Date()
+        let executionTime = methodFinish.timeIntervalSince(methodStart)
+        print("Execution time: \(executionTime)")
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -184,6 +270,9 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
 
     func loadTopRated(){
+        print("LoadTopRated:")
+        let methodStart = Date()
+
         topRatedTwo.adjustsFontSizeToFitWidth = true
         topRatedOne.adjustsFontSizeToFitWidth = true
         ref.child("users").child((Auth.auth().currentUser?.uid)!).child("Ratings").child("Artists")
@@ -205,6 +294,10 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                 self.topRatedTwo.text = artistName
              //   self.topRatedTwoImage.image = self.images[snapshot.key]
             })
+
+        let methodFinish = Date()
+        let executionTime = methodFinish.timeIntervalSince(methodStart)
+        print("Execution time: \(executionTime)")
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -226,7 +319,8 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                     selectedArtistID = artistRatingIDs[indexPath.row]
                     selectedArtistKey = artistRatingKeys[indexPath.row]
                     selectedArtistName = artistRatingNames[indexPath.row]
-                    
+                    selectedRating = artistRatings[indexPath.row]
+                    performSegue(withIdentifier: "showRating", sender: nil)
                 }else{
                     
                 }
@@ -242,6 +336,9 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                     selectedArtistID = venuetRatingIDs[indexPath.row]
                     selectedArtistKey = venueRatingKeys[indexPath.row]
                     selectedArtistName = venueRatingNames[indexPath.row]
+                    selectedRating = venueRatings[indexPath.row]
+                    performSegue(withIdentifier: "showRating", sender: nil)
+
                 }else{
                     
                 }
@@ -251,6 +348,9 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     func loadRating(id: String){
+        print("LoadTopRated:")
+        let methodStart = Date()
+
         ref.child("Artists").child(selectedArtistKey).child("Ratings").child(id).observeSingleEvent(of: .childAdded, with: { snapshot in
             
             if(snapshot.exists()){
@@ -260,6 +360,8 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                 let overallRating : Double = (value?["overall_rating"] as? Double)!
                 let username : String = (value?["username"] as? String)!
                 let body : String = (value?["rateBody"] as? String)!
+                let location : String = (value?["location"] as? String)!
+                let date : String = (value?["date"] as? String)!
                 var production = 0.0
                 var crowdEngagement = 0.0
                 var rawTalent = 0.0
@@ -274,7 +376,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                     setList = (value?["overall_rating"] as? Double)!
                 }
                 
-                self.selectedRating = Rating(ratingType: Int(ratingType), setList: setList, rawTalent: rawTalent, production: production, crowdEngagement: crowdEngagement, overallRating: overallRating, username: username, body: body)
+                self.selectedRating = Rating(ratingType: Int(ratingType), setList: setList, rawTalent: rawTalent, production: production, crowdEngagement: crowdEngagement, overallRating: overallRating, username: username, body: body, location: location, date: date)
                 
                 self.performSegue(withIdentifier: "showRating", sender: nil)
                 
@@ -282,6 +384,10 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         }) { (error) in
             print(error.localizedDescription)
         }
+
+        let methodFinish = Date()
+        let executionTime = methodFinish.timeIntervalSince(methodStart)
+        print("Execution time: \(executionTime)")
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -295,7 +401,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                 let cell : HomeCollectionViewCell = venueCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! HomeCollectionViewCell
                 cell.textLabel.text = venueRatingNames[indexPath.row]
                 switch(cell.textLabel.text?.lowercased()){
-                case "mopop":
+                case "mo pop":
                     cell.image.image = UIImage(named: "mopop")
                     break
                 case "prime":
@@ -310,7 +416,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                 case "wayside central":
                     cell.image.image = UIImage(named: "wayside")
                     break
-                case "20 monroe life":
+                case "20 monroe live":
                     cell.image.image = UIImage(named: "20monroe")
                     break
                 case "lollapalooza":
@@ -348,6 +454,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             vc.artistID = selectedArtistID
             vc.ratingID = selectedArtistKey
             vc.artistName = self.selectedArtistName
+            vc.curRating = self.selectedRating
         }else if (segue.identifier == "more") {
             let vc : MyRatingsTableViewController = segue.destination as! MyRatingsTableViewController
 

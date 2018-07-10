@@ -18,10 +18,12 @@ class Rating {
     var raw_talent = 0.0
     var set_list = 0.0
     var username = ""
+    var location = ""
+    var date = ""
     var body = ""
     var artistName = ""
     
-    init(ratingType: Int, setList: Double, rawTalent: Double, production: Double, crowdEngagement:Double, overallRating: Double, username: String, body: String) {
+    init(ratingType: Int, setList: Double, rawTalent: Double, production: Double, crowdEngagement:Double, overallRating: Double, username: String, body: String, location: String, date: String) {
         self.ratingType = ratingType
         self.set_list = setList
         self.raw_talent = rawTalent
@@ -29,6 +31,8 @@ class Rating {
         self.crowd_engagement = crowdEngagement
         self.username = username
         self.body = body
+        self.date = date
+        self.location = location
         self.overall_rating = overallRating
     }
     

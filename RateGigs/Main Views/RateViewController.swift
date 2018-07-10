@@ -22,11 +22,13 @@ class RateViewController: UIViewController {
     @IBOutlet var ratingSlider: UISlider!
     @IBOutlet var ratingLabel: UILabel!
     @IBOutlet var titleLabel: UILabel!
+    var headerImage = UIImage()
     var artistName = ""
     var id = ""
     var ratingOptions = ["Raw Talent", "Set List", "Crowd Engagement", "Production", "Overall Performace"]
     var artist = false
     
+    @IBOutlet weak var headerImageView: UIImageView!
     var ref = DatabaseReference()
     @IBOutlet var soundwave: UIImageView!
     
@@ -160,6 +162,8 @@ class RateViewController: UIViewController {
     }
     
     func updateUI(){
+        headerImageView.image = headerImage
+
         if(rateType == "simple"){
             ratingSlider.value = 0
             ratingType.text = "Artist"
@@ -179,7 +183,7 @@ class RateViewController: UIViewController {
             vc.artistID = self.id
             vc.rateType = self.rateType
             vc.newRating = currentRating + rating
-            
+            vc.headerImage = self.headerImage
             vc.rawTalentRating = self.rawTalentRating
             vc.setListRating = self.setListRating
             vc.crowdEngagementRating = self.crowdEngagementRating
